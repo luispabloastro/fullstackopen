@@ -13,6 +13,14 @@ const Content = () => {
   )
 }
 
+const Content1 = () => {
+  return(
+    <div><h2>Anecdote with most votes</h2></div>
+  )
+}
+
+
+
 
 const Button = (props) => (
     <button onClick={props.handleClick}>{props.text}</button>
@@ -45,6 +53,9 @@ const Statistics = (props) => {
     </tbody>
   )
 }
+
+
+
 
 
 const App = () => {
@@ -91,7 +102,7 @@ const randomString = () => {
 const initialVotes = new Array(anecdotes.length).fill(0)
 console.log(initialVotes)
 
-// creamos una array de 8 llena de ceros 
+// creamos una array de 8 valores llena de ceros 
 
 const [votes, setVotes] = useState(initialVotes)
 
@@ -102,6 +113,8 @@ const handleVotes = () => {
   newVotes[selected] += 1
   setVotes(newVotes)
 }
+
+const MaxvoteIndex = votes.indexOf(Math.max(...votes))
 
   return (
     <div>
@@ -115,6 +128,15 @@ const handleVotes = () => {
       <p>has {votes[selected]} vote(s)</p>
       <button onClick={handleVotes}>vote</button>
       <button onClick={randomString}>next anecdote</button>
+      <Content1/>
+      {votes[MaxvoteIndex] === 0 ? (
+        <p>No votes yet</p>
+      ):(
+       <>
+        <p>{anecdotes[MaxvoteIndex]}.</p>
+        <p>Has {MaxvoteIndex} vote(s)</p>
+       </>
+      )}
     </div>
   )
 }
