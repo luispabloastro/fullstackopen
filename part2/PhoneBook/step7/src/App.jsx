@@ -55,6 +55,9 @@ const App = () => {
 
 // mejor solucion que quita el error de Uncaught (in promise) ERROR
 
+const url = 'http://localhost:3001/persons'
+
+
 
 const hook = () => {
   const fetchData = async () => {
@@ -77,7 +80,10 @@ const hook = () => {
 useEffect(hook, []); 
 
 
-    const addName = (event) => {
+
+
+
+    const addName = async (event) => {
       event.preventDefault()
       console.log('button clicked', event.target)
       
@@ -94,11 +100,24 @@ useEffect(hook, []);
       number: newNumber,
       id: persons.length +1
     }
+    try{
+      await axios.post(url, ObjetcName).then(response=> {
+        console.log(response)
+        setPersons(persons.concat(response.data))
+        setFilteredPerson(filteredPerson.concat(response.data)) 
+        setNewName("")
+        setNewNumber('')
+      })
+    }catch (error) {
+      console.error('Error detallado:', {
+        message: error.message,
+        code: error.code,
+        config: error.config.url
+      });
+    }
+    
 
-    setPersons(persons.concat(ObjetcName))
-    setFilteredPerson(filteredPerson.concat(ObjetcName)) 
-    setNewName("")
-    setNewNumber('')
+    
   }
     
   
