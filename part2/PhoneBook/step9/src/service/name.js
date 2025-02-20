@@ -16,11 +16,6 @@ const remove = async (id) => {
     return await request.then((response) => response.data)
 }
 
-const update = async (id,newObject) => {
-  const request = axios.put(`${url}/${id}`, newObject)
-    return await request.then((response)=> response.data)
-}
-
 export default {getAll,create,remove,update}
 
 

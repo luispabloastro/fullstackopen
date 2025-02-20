@@ -43,6 +43,8 @@ const Persons = ({filteredPerson,deleteName}) => {
             )}
       </ul>
     </div>
+      
+    
   )
 }
 
@@ -82,51 +84,36 @@ useEffect(hook, []);
 
     const addName = (event) => {
       event.preventDefault()
-      console.log('button clicked', event.target)      
-    const NameExist = persons.some((person)=>person.name.toLowerCase()===newName.toLowerCase())
+      console.log('button clicked', event.target)
+      
+    const NameExist = persons.some((person)=>person.name===newName)
+
+    if (NameExist) {
+      alert(`${newName} is already added to phonebook`)
+      setNewName("")
+      return
+    }
 
     const ObjetcName = {
       name: newName,
       number: newNumber,
       // id: persons.length +1
     }
-
-    if (NameExist) {
-      const confirmed = window.confirm(`${newName} is already added to phonebook`)
-      if(!confirmed){
-        return
-      }
-
-      //update logic 
-      name.update(NameExist,id,ObjetcName).then(updatePerson => {
-        setPersons(prevPerson => {
-          prevPerson.id === NameExist.id ? updatePerson: persons 
-        })
-        setFilteredPerson(prevfilteredPerson => {
-          prevfilteredPerson.id === NameExist.id ? updatePerson: persons 
-        })
-      }).catch(error=> {
-        console.error("Error updating the number", error.message)
-        alert("Error updating the number")
+    try{
+       name.create(ObjetcName).then(returnedPerson=> {
+        console.log(returnedPerson)
+        setPersons(persons.concat(returnedPerson))
+        setFilteredPerson(filteredPerson.concat(returnedPerson)) 
+        setNewName("")
+        setNewNumber('')
       })
-
-    } else {
-        try{
-          name.create(ObjetcName).then(returnedPerson=> {
-           console.log(returnedPerson)
-           setPersons(persons.concat(returnedPerson))
-           setFilteredPerson(filteredPerson.concat(returnedPerson)) 
-         })
-       }catch (error) {
-         console.error('Error detallado:', {
-           message: error.message,
-           code: error.code,
-           config: error.config.url
-         });
-       }
-      }  
-    setNewName("")
-    setNewNumber('')  
+    }catch (error) {
+      console.error('Error detallado:', {
+        message: error.message,
+        code: error.code,
+        config: error.config.url
+      });
+    }
   }
 
   const deleteName = (id,personsName) => {
@@ -147,6 +134,7 @@ useEffect(hook, []);
   }
 
 
+  
     const handleNameChange = (event) => {    
 	  console.log(event.target.value)  // Muestra el valor actual del input
 	  setNewName(event.target.value)  // Actualiza el estado con el nuevo valor
